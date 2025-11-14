@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Virtual</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6O3X6kQq5+0Q6xZ6zG2g3p6J6q7b5x9Yb1JQ2X6v6Q3u5/3q9y0rQZ0N1uE3a2K4s7x9D2f7g3h6k8l5m2n==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+</head>
+<body>
+    
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="sidebar-profile">
+                <img src="ICONOROBOT.png" alt="Avatar">
+                <span>Asistente Virtual</span>
+            </div>
+            <ul>
+                <li class="active" id="nav-chat">
+                    <a href="#"><i class="fa-solid fa-comment-dots"></i> Asistente Virtual</a>
+                </li>
+                <li id="nav-calendar">
+                    <a href="#"><i class="fa-solid fa-calendar-days"></i> Horario</a>
+                </li>
+            </ul>
+
+            <div class="sidebar-logout">
+                <a href="#" id="nav-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
+            </div>
+            
+        </nav>
+
+        <main class="main-content">
+
+            <div id="chat-view" class="view active">
+                <header class="chat-header">
+                    <h2>Hola! Usuario</h2> <p>Tus tareas</p>
+                </header>
+                
+                <div class="chat-view-body">
+                
+                    <div class="chat-container">
+                        <h3 class="chat-widget-title">Asistente Virtual</h3>
+                        
+                        <div id="chatbox">
+                            </div>
+                        
+                        <form id="chat-form" class="chat-input-form">
+                            <input type="text" id="user-input" placeholder="¿En qué más te puedo ayudar?" autocomplete="off">
+                            <button type="submit" id="send-btn">➤</button>
+                        </form>
+                    </div>
+
+                    <div class="chat-actions-sidebar">
+                        <button class="btn-action" id="btn-nueva-conversacion">Nueva Conversación</button>
+                        <button class="btn-action" id="btn-agregar-tarea">Agregar Tarea</button>
+                        <button class="btn-action" id="btn-ver-historial">Ver Historial</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="calendar-view" class="view">
+                <header class="chat-header">
+                    <h2>Todas tus tareas</h2>
+                    <p>Horario de Tareas</p>
+                </header>
+                
+                <div class="calendar-container">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+
+            <div id="history-view" class="view">
+                <header class="chat-header">
+                    <h2>Historial de Conversaciones</h2>
+                    <p>Tus chats anteriores</p>
+                </header>
+                
+                <div class="history-container">
+                    <div class="history-list" id="historyList">
+                        <p class="history-empty">No hay conversaciones guardadas aún.</p>
+                    </div>
+                    <div class="history-detail" id="historyDetail">
+                        <p style="text-align: center; color: #999; margin-top: 2rem;">Selecciona una conversación para ver los detalles</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal para crear tarea (mejor UX que prompt/alert) -->
+    <div id="taskModal" class="task-modal" aria-hidden="true">
+        <div class="task-modal-backdrop"></div>
+        <div class="task-modal-panel">
+            <h3>Agregar nueva tarea</h3>
+            <form id="taskModalForm" class="task-modal-form">
+                <label for="modal-title">Título</label>
+                <input id="modal-title" type="text" required placeholder="Ej: Estudiar Fases">
+
+                <div class="row">
+                    <div class="col">
+                        <label for="modal-date">Fecha</label>
+                        <input id="modal-date" type="date" required>
+                    </div>
+                    <div class="col">
+                        <label for="modal-time">Hora</label>
+                        <input id="modal-time" type="time" required>
+                    </div>
+                </div>
+
+                <label for="modal-duration">Duración (min)</label>
+                <input id="modal-duration" type="number" min="1" value="25">
+
+                <p id="taskModalError" class="task-modal-error" aria-live="polite"></p>
+
+                <div class="task-modal-actions">
+                    <button type="button" id="taskModalCancel" class="btn-action">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast sutil para mensajes -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
