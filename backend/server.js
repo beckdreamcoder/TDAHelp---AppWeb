@@ -1,5 +1,4 @@
 const path = require('path');
-
 const express = require("express");
 const fetch = require("node-fetch");
 require("dotenv").config();
@@ -11,6 +10,7 @@ app.use(express.static(frontendPath));
 
 // --- INSTRUCCIÓN DEL SISTEMA BASADA DEL PROYECTO ---
 // Esta es la "personalidad" del Asistente Virtual
+// ¡CORRECCIÓN! Se eliminó la fecha hard-codeada de aquí.
 const systemInstruction = {
   parts: [
 {
@@ -19,8 +19,6 @@ const systemInstruction = {
       * Tu objetivo es la claridad y la acción. Usa frases cortas y listas.
       * **Usa emojis funcionales** (✅, 📅, 🧠, ⏰, ➡️).
       
-      **CONTEXTO IMPORTANTE: Hoy es 12 de noviembre de 2025.** (Usa esta fecha para calcular "mañana" o "el viernes").
-
       **Tus Reglas de Comportamiento:**
       
       1.  **Segmentar Tareas:** Divide tareas grandes en micro-tareas.
@@ -48,7 +46,7 @@ const systemInstruction = {
       }
       </TASK_SCHEDULE>
 
-      **EJEMPLO DE CONVERSACIÓN:**
+      **EJEMPLO DE CONVERSACIÓN (¡La fecha es solo un ejemplo!):**
       * **Usuario:** "Agenda 'Estudiar Fases' mañana a las 10am."
       * **Tu Respuesta (lo que envías):**
           ¡Listo! Agendado. 📅
@@ -71,16 +69,37 @@ const systemInstruction = {
 // ----------------------------------------------------
 
 app.post("/api/chat", async (req, res) => {
-  // --- CAMBIO AQUÍ ---
   // Ya no recibimos un 'message', sino el 'history' (historial) completo
   const { history } = req.body;
 
+  // --- ¡NUEVA LÓGICA DE FECHA DINÁMICA! ---
+  // Obtenemos la fecha actual real en la zona horaria correcta (Ej: 'America/Lima')
+  // Ajusta 'America/Lima' a tu zona horaria si es necesario.
+  const hoy = new Date().toLocaleDateString('es-ES', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      timeZone: 'America/Lima' 
+  });
+  
+  // Creamos el contexto de fecha que se inyectará a la IA
+  const dateContext = `**CONTEXTO IMPORTANTE: La fecha de hoy es ${hoy}.** (Usa esta fecha para todos los cálculos de "mañana", "próximo lunes", etc.)`;
+  
+  // Clonamos la instrucción del sistema para esta petición (para no modificar la original)
+  const dynamicSystemInstruction = JSON.parse(JSON.stringify(systemInstruction));
+  
+  // Inyectamos el contexto de la fecha al principio del texto de la instrucción
+  dynamicSystemInstruction.parts[0].text = dateContext + '\n\n' + dynamicSystemInstruction.parts[0].text;
+  // --- FIN DE LA NUEVA LÓGICA ---
+
+
   // Prepara el cuerpo de la solicitud (payload)
   const payload = {
-    // --- CAMBIO AQUÍ ---
     // Pasamos el historial completo que nos envió el frontend
     contents: history, 
-    system_instruction: systemInstruction,
+    // ¡CORRECCIÓN! Usamos la instrucción dinámica con la fecha real
+    system_instruction: dynamicSystemInstruction,
   };
 
   try {
