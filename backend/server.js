@@ -8,9 +8,7 @@ app.use(express.json());
 const frontendPath = path.join(__dirname, "..", "frontend");
 app.use(express.static(frontendPath));
 
-// --- INSTRUCCIÓN DEL SISTEMA BASADA DEL PROYECTO ---
-// Esta es la "personalidad" del Asistente Virtual
-// ¡CORRECCIÓN! Se eliminó la fecha hard-codeada de aquí.
+// --- INSTRUCCIÓN DEL SISTEMA (ACTUALIZADA) ---
 const systemInstruction = {
   parts: [
 {
@@ -29,13 +27,12 @@ const systemInstruction = {
       
       4.  **Agendar Tareas (Tu Herramienta Principal):**
           * Después de proponer tareas, **pregunta directo: "¿Agendamos? 📅"**.
-          * Si el usuario acepta agendar (ej: "sí, mañana a las 10am" o "agenda 'Fases' el viernes a las 3pm"), debes hacer dos cosas:
-              1.  Calcular la fecha y hora exactas (en formato ISO 8601).
-              2.  Generar un bloque de código de Tarea en tu respuesta.
+          * Si el usuario acepta agendar (ej: "sí, mañana a las 10am"), calcula la fecha/hora y genera UN bloque de código.
+          
+          * **¡NUEVO! REGLA DE SEGMENTACIÓN:**
+          * Si el usuario pide **segmentar** o **dividir** una tarea (ej: 'divide "Estudiar Cálculo" en 3 sesiones de 25 min'), debes generar **MÚLTIPLES bloques <TASK_SCHEDULE>**, uno por cada micro-tarea.
 
-      **FORMATO DE SALIDA OBLIGATORIO PARA AGENDAR:**
-      Tu respuesta DEBE contener un bloque de código JSON especial, ADEMÁS de tu respuesta de texto normal.
-      El formato es:
+      **FORMATO DE SALIDA (PUEDE SER ÚNICO O MÚLTIPLE):**
       <TASK_SCHEDULE>
       {
         "title": "El título de la tarea",
@@ -46,15 +43,24 @@ const systemInstruction = {
       }
       </TASK_SCHEDULE>
 
-      **EJEMPLO DE CONVERSACIÓN (¡La fecha es solo un ejemplo!):**
-      * **Usuario:** "Agenda 'Estudiar Fases' mañana a las 10am."
+      **EJEMPLO DE SEGMENTACIÓN:**
+      * **Usuario:** "Divide 'Proyecto' en 2 partes, mañana 10am y sábado 11am."
       * **Tu Respuesta (lo que envías):**
-          ¡Listo! Agendado. 📅
+          ¡Hecho! Lo dividí en 2 micro-tareas: 📅
           <TASK_SCHEDULE>
           {
-            "title": "Estudiar Fases",
-            "start": "2025-11-13T10:00:00",
-            "end": "2025-11-13T10:25:00",
+            "title": "Proyecto - Parte 1",
+            "start": "2025-11-15T10:00:00",
+            "end": "2025-11-15T10:25:00",
+            "backgroundColor": "#0d6efd",
+            "borderColor": "#0d6efd"
+          }
+          </TASK_SCHEDULE>
+          <TASK_SCHEDULE>
+          {
+            "title": "Proyecto - Parte 2",
+            "start": "2025-11-16T11:00:00",
+            "end": "2025-11-16T11:25:00",
             "backgroundColor": "#0d6efd",
             "borderColor": "#0d6efd"
           }
@@ -69,37 +75,14 @@ const systemInstruction = {
 // ----------------------------------------------------
 
 app.post("/api/chat", async (req, res) => {
-  // Ya no recibimos un 'message', sino el 'history' (historial) completo
+  // Es un proxy simple. Recibe el historial del cliente.
   const { history } = req.body;
 
-  // --- ¡NUEVA LÓGICA DE FECHA DINÁMICA! ---
-  // Obtenemos la fecha actual real en la zona horaria correcta (Ej: 'America/Lima')
-  // Ajusta 'America/Lima' a tu zona horaria si es necesario.
-  const hoy = new Date().toLocaleDateString('es-ES', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      timeZone: 'America/Lima' 
-  });
-  
-  // Creamos el contexto de fecha que se inyectará a la IA
-  const dateContext = `**CONTEXTO IMPORTANTE: La fecha de hoy es ${hoy}.** (Usa esta fecha para todos los cálculos de "mañana", "próximo lunes", etc.)`;
-  
-  // Clonamos la instrucción del sistema para esta petición (para no modificar la original)
-  const dynamicSystemInstruction = JSON.parse(JSON.stringify(systemInstruction));
-  
-  // Inyectamos el contexto de la fecha al principio del texto de la instrucción
-  dynamicSystemInstruction.parts[0].text = dateContext + '\n\n' + dynamicSystemInstruction.parts[0].text;
-  // --- FIN DE LA NUEVA LÓGICA ---
-
-
-  // Prepara el cuerpo de la solicitud (payload)
+  // El CLIENTE (app.js) es responsable de inyectar la fecha en el historial.
+  // Pasamos el historial tal cual nos llega.
   const payload = {
-    // Pasamos el historial completo que nos envió el frontend
     contents: history, 
-    // ¡CORRECCIÓN! Usamos la instrucción dinámica con la fecha real
-    system_instruction: dynamicSystemInstruction,
+    system_instruction: systemInstruction,
   };
 
   try {

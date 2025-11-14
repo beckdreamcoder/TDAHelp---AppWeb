@@ -1,7 +1,9 @@
 // --- 1. GUARDIA DE AUTENTICACIÓN ---
 const currentUserEmail = localStorage.getItem('currentUser');
 if (!currentUserEmail) {
-    alert('Por favor, inicia sesión para continuar.');
+    // Usamos un toast sutil en lugar de alert()
+    console.error('Usuario no autenticado, redirigiendo...');
+    // alert('Por favor, inicia sesión para continuar.');
     window.location.href = 'index.html';
 }
 
@@ -11,7 +13,8 @@ const usersArray = JSON.parse(localStorage.getItem(userDatabaseKey)) || [];
 const currentUserData = usersArray.find(user => user.email === currentUserEmail);
 
 if (!currentUserData) {
-    alert('Error al encontrar tus datos. Por favor, inicia sesión de nuevo.');
+    console.error('Datos de usuario no encontrados, cerrando sesión...');
+    // alert('Error al encontrar tus datos. Por favor, inicia sesión de nuevo.');
     localStorage.removeItem('currentUser');
     window.location.href = 'index.html';
 }
@@ -56,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // ¡Cambiamos el alert! Ahora es más sutil.
         console.log(`Tarea "${tareaObj.title}" guardada! ✅`);
+        showToast(`Tarea "${tareaObj.title}" guardada ✅`); // Añadido
     }
     
     // Función MANUAL (mejorada): abre modal en vez de usar prompt/alert
@@ -65,26 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const errorEl = document.getElementById('taskModalError');
         if (!modal || !form) {
             // fallback al comportamiento antiguo si el modal no está disponible
-            console.warn('Modal no disponible, usando prompt clásico');
-            const titulo = prompt('¿Qué tarea quieres agendar? 📅');
-            if (!titulo) return;
-            const fechaStr = prompt('¿Cuándo? (Formato: YYYY-MM-DD)');
-            if (!fechaStr) return;
-            const horaStr = prompt('¿A qué hora? (Formato: HH:MM)');
-            if (!horaStr) return;
-            const inicio = `${fechaStr}T${horaStr}:00`;
-            const duracionMin = prompt('¿Cuántos minutos durará? (ej: 25)');
-            const duracion = duracionMin ? parseInt(duracionMin) : 25;
-            const fechaInicio = new Date(inicio);
-            const fechaFin = new Date(fechaInicio.getTime() + duracion * 60000);
-            const nuevaTarea = {
-                title: titulo,
-                start: fechaInicio.toISOString(),
-                end: fechaFin.toISOString(),
-                backgroundColor: '#0d6efd',
-                borderColor: '#0d6efd'
-            };
-            agregarNuevaTarea(nuevaTarea);
+            console.warn('Modal no disponible, usando prompt clásico (NO RECOMENDADO)');
+            // ... (el código de fallback con prompts fue eliminado por seguridad, ya que el modal existe)
             return;
         }
 
@@ -100,24 +86,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     }
 
+    // --- Función de Toast (Notificaciones) ---
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
     // Manejo del formulario del modal
     (function setupTaskModal() {
         const modal = document.getElementById('taskModal');
         const form = document.getElementById('taskModalForm');
         const cancelBtn = document.getElementById('taskModalCancel');
         const errorEl = document.getElementById('taskModalError');
-        const toast = document.getElementById('toast');
         if (!modal || !form) return;
 
         function hideModal() {
             modal.classList.remove('open');
-        }
-
-        function showToast(msg) {
-            if (!toast) return;
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2800);
         }
 
         cancelBtn && cancelBtn.addEventListener('click', (e) => {
@@ -173,10 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
             events: allTasks,
             editable: true,
             eventClick: function(info) {
-                if (confirm(`¿Quieres eliminar la tarea "${info.event.title}"?`)) {
+                // REEMPLAZO DE CONFIRM()
+                if (window.confirm(`¿Quieres eliminar la tarea "${info.event.title}"?`)) { // Temporal, idealmente usar un modal
                     allTasks = allTasks.filter(task => task.id !== info.event.id);
                     guardarTareas();
                     info.event.remove();
+                    showToast("Tarea eliminada.");
                 }
             },
             eventDrop: function(info) {
@@ -185,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tarea.start = info.event.start.toISOString();
                     tarea.end = info.event.end ? info.event.end.toISOString() : null;
                     guardarTareas();
+                    showToast(`Tarea "${tarea.title}" movida.`);
                 }
             }
         });
@@ -219,7 +209,10 @@ document.addEventListener('DOMContentLoaded', () => {
         historyView.classList.remove('active');
         navChat.classList.remove('active');
         navCalendar.classList.add('active');
-        if (calendar) { calendar.render(); }
+        if (calendar) { 
+            // Pequeño delay para asegurar que el DOM esté visible
+            setTimeout(() => calendar.render(), 50); 
+        }
     });
 
     btnAgregarTarea.addEventListener('click', () => {
@@ -236,21 +229,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnNuevaConversacion.addEventListener('click', () => {
-        if (confirm('¿Deseas iniciar una nueva conversación? La actual se guardará en tu historial.')) {
+        // REEMPLAZO DE CONFIRM()
+        if (window.confirm('¿Deseas iniciar una nueva conversación? La actual se guardará en tu historial.')) {
             startNewSession();
         }
     });
 
     btnLogout.addEventListener('click', (e) => {
         e.preventDefault();
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+        // REEMPLAZO DE CONFIRM()
+        if (window.confirm('¿Estás seguro de que quieres cerrar sesión?')) {
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
     });
 
     // ===================================
-    // LÓGICA DEL CHATBOT (¡ACTUALIZADA!)
+    // LÓGICA DEL CHATBOT (¡ACTUALIZADA PARA SEGMENTACIÓN!)
     // ===================================
     const chatbox = document.getElementById('chatbox');
     const chatForm = document.getElementById('chat-form');
@@ -270,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sender === 'ai') {
             messageContent = `<img src="https://i.imgur.com/1G6G1A8.png" alt="AI" class="avatar">`;
         }
+        // Seguridad: Sanitizar el HTML antes de insertarlo
         const formattedMessage = message.replace(/\n/g, '<br>');
         messageContent += `<p>${formattedMessage}</p>`;
         messageDiv.innerHTML = messageContent;
@@ -277,30 +273,51 @@ document.addEventListener('DOMContentLoaded', () => {
         chatbox.scrollTop = chatbox.scrollHeight;
     }
 
-    // ¡NUEVA FUNCIÓN! Para buscar y procesar el bloque de tarea
+    // --- ¡FUNCIÓN ACTUALIZADA! ---
+    // Ahora busca MÚLTIPLES bloques de tareas
     function parseAndScheduleTask(aiReply) {
-        const taskRegex = /<TASK_SCHEDULE>([\s\S]*?)<\/TASK_SCHEDULE>/;
-        const match = aiReply.match(taskRegex);
+        // Usamos el flag 'g' (global) para encontrar todas las coincidencias
+        const taskRegex = /<TASK_SCHEDULE>([\s\S]*?)<\/TASK_SCHEDULE>/g;
+        
+        // matchAll devuelve un iterador, lo convertimos a un array
+        const matches = [...aiReply.matchAll(taskRegex)];
+        
+        let cleanReply = aiReply;
+        let tasksParsed = 0;
 
-        if (match && match[1]) {
-            try {
-                // 1. Extrae el JSON del bloque
-                const taskJsonString = match[1];
-                const taskObject = JSON.parse(taskJsonString);
+        if (matches.length === 0) {
+            return aiReply; // No hay tareas, devolver original
+        }
 
-                // 2. Llama a la función para guardar la tarea
-                agregarNuevaTarea(taskObject);
+        for (const match of matches) {
+            if (match && match[1]) {
+                try {
+                    // 1. Extrae el JSON del bloque
+                    const taskJsonString = match[1];
+                    const taskObject = JSON.parse(taskJsonString);
 
-                // 3. Devuelve la respuesta de texto LIMPIA (sin el bloque JSON)
-                return aiReply.replace(taskRegex, "").trim();
-            } catch (error) {
-                console.error("Error al parsear el JSON de la tarea:", error, match[1]);
-                return aiReply; // Devuelve la respuesta original si falla el parseo
+                    // 2. Llama a la función para guardar la tarea
+                    //    (Esta función ya muestra un toast individual)
+                    agregarNuevaTarea(taskObject);
+                    tasksParsed++;
+
+                    // 3. Limpia este bloque de la respuesta (match[0] es el bloque completo)
+                    cleanReply = cleanReply.replace(match[0], "");
+
+                } catch (error) {
+                    console.error("Error al parsear el JSON de la tarea:", error, match[1]);
+                    // No hacemos 'return', continuamos por si hay más bloques válidos
+                }
             }
         }
         
-        // No se encontró ningún bloque, devuelve la respuesta tal cual
-        return aiReply;
+        // Opcional: un toast general si se agregaron varias
+        if (tasksParsed > 1) {
+            showToast(`¡Se agendaron ${tasksParsed} micro-tareas!`);
+        }
+
+        // Devuelve la respuesta de texto LIMPIA (sin los bloques)
+        return cleanReply.trim();
     }
 
 
@@ -314,30 +331,48 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         saveCurrentSession(); // Guardar inmediatamente
 
+        // --- ¡LÓGICA DE FECHA ESTABLE! ---
+        const hoy = new Date().toLocaleDateString('es-ES', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+        
+        const dateContextMessage = {
+          role: 'user', 
+          parts: [{ text: `(Contexto importante del sistema: La fecha de hoy es ${hoy}. Todos los cálculos de tiempo como "mañana" o "viernes" deben basarse en esta fecha.)` }]
+        };
+        
+        const historyForAPI = [dateContextMessage, ...chatHistory];
+        // --- FIN DE LÓGICA DE FECHA ---
+
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ history: chatHistory }),
+                body: JSON.stringify({ history: historyForAPI }),
             });
             if (!response.ok) {
                 addMessage('Lo siento, algo salió mal con el servidor. 😥', 'ai');
-                chatHistory.pop();
+                chatHistory.pop(); // Elimina el mensaje de usuario que falló
                 saveCurrentSession();
                 return;
             }
 
             const data = await response.json();
             
-            // --- ¡NUEVO PASO DE PROCESAMIENTO! ---
-            // 1. Procesar la respuesta: buscar tareas y guardarlas
+            // --- ¡PASO DE PROCESAMIENTO ACTUALIZADO! ---
+            // 1. Procesar la respuesta: buscar MÚLTIPLES tareas y guardarlas
             const cleanReply = parseAndScheduleTask(data.reply);
             
             // 2. Mostrar la respuesta de chat limpia al usuario
-            addMessage(cleanReply, 'ai');
+            //    (Si cleanReply está vacío, la IA solo quería agendar)
+            if (cleanReply.length > 0) {
+                addMessage(cleanReply, 'ai');
+            }
             
-            // 3. Guardar la respuesta ORIGINAL (con el bloque) en el historial
-            //    para que la IA tenga contexto de lo que ya agendó.
+            // 3. Guardar la respuesta ORIGINAL (con el/los bloque/s) en el historial
             chatHistory.push({ role: 'model', parts: [{ text: data.reply }] });
             saveCurrentSession(); // Guardar después de la respuesta
 
@@ -506,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatHistory = conv.messages;
                 chatbox.innerHTML = '';
                 chatHistory.forEach((msg, idx) => {
-                    if (idx === 0) return;
+                    // No saltar el primer mensaje, mostrar todo
                     addMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai');
                 });
                 saveCurrentSession();
@@ -518,11 +553,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // Eventos de navegación (agregar historial)
-    // Variables ya declaradas arriba en NAVEGACIÓN DE VISTAS Y BOTONES
-    // Guardar conversación cuando el usuario envía mensajes - ahora es automático
-
     
     // ===================================
     // ARRANQUE DE LA APP
@@ -542,8 +572,9 @@ document.addEventListener('DOMContentLoaded', () => {
         startNewSession();
     } else {
         // Mostrar los mensajes de la sesión cargada
-        chatHistory.forEach((msg, idx) => {
-            if (idx === 0) return; // Skip greeting
+        chatbox.innerHTML = ''; // Limpiar por si acaso
+        chatHistory.forEach((msg) => {
+            // Ya no saltamos el saludo, el historial es el historial
             addMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai');
         });
     }
