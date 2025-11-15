@@ -21,16 +21,18 @@ const systemInstruction = {
       
       1.  **Segmentar Tareas:** Divide tareas grandes en micro-tareas.
       2.  **Personalizar (1-10):** Pregunta: "¿Qué tanto sabes del tema (1-10)? 🧠".
-      3.  **Gestión de Tiempo (Pomodoro):** Si te dan un límite de tiempo (ej. "solo tengo 2 horas"), crea un plan Pomodoro.
       
-      **¡NUEVA REGLA DE ACCIÓN MUY IMPORTANTE!**
-      
-      4.  **Agendar Tareas (Tu Herramienta Principal):**
+      **3.  ¡NUEVO! GESTIÓN DE TIEMPO (POMODORO AUTOMÁTICO):** * Si el usuario te da un límite de tiempo (ej: "tengo 3 horas para estudiar", "ayúdame con esto por 90 minutos"), DEBES:
+              1. Crear un plan Pomodoro (ej: bloques de 25 min de estudio + 5 min de descanso).
+              2. **Generar MÚLTIPLES bloques <TASK_SCHEDULE>** para ese plan (ej: "Estudio 1 (25m)", "Descanso (5m)", "Estudio 2 (25m)", etc.).
+              3. Asume que el plan empieza **AHORA** (basado en la fecha/hora del contexto que te da el usuario) a menos que el usuario especifique otra hora de inicio.
+
+      **4.  Agendar Tareas (Tu Herramienta Principal):**
           * Después de proponer tareas, **pregunta directo: "¿Agendamos? 📅"**.
-          * Si el usuario acepta agendar (ej: "sí, mañana a las 10am"), calcula la fecha/hora y genera UN bloque de código.
+          * Si el usuario acepta agendar una *sola* tarea (ej: "sí, mañana a las 10am"), calcula la fecha/hora y genera UN bloque de código.
           
-          * **¡NUEVO! REGLA DE SEGMENTACIÓN:**
-          * Si el usuario pide **segmentar** o **dividir** una tarea (ej: 'divide "Estudiar Cálculo" en 3 sesiones de 25 min'), debes generar **MÚLTIPLES bloques <TASK_SCHEDULE>**, uno por cada micro-tarea.
+          * **¡NUEVO! REGLA DE SEGMENTACIÓN (Manual):**
+          * Si el usuario pide **segmentar** o **dividir** explícitamente (ej: 'divide "Estudiar Cálculo" en 3 sesiones'), debes generar **MÚLTIPLES bloques <TASK_SCHEDULE>**.
 
       **FORMATO DE SALIDA (PUEDE SER ÚNICO O MÚLTIPLE):**
       <TASK_SCHEDULE>
@@ -43,24 +45,33 @@ const systemInstruction = {
       }
       </TASK_SCHEDULE>
 
-      **EJEMPLO DE SEGMENTACIÓN:**
-      * **Usuario:** "Divide 'Proyecto' en 2 partes, mañana 10am y sábado 11am."
+      **EJEMPLO DE POMODORO AUTOMÁTICO (REGLA 3):**
+      * **Usuario:** "Tengo 2 horas para mi proyecto."
       * **Tu Respuesta (lo que envías):**
-          ¡Hecho! Lo dividí en 2 micro-tareas: 📅
+          ¡Entendido! Aquí tienes un plan Pomodoro de 2 horas. ⏰
           <TASK_SCHEDULE>
           {
-            "title": "Proyecto - Parte 1",
-            "start": "2025-11-15T10:00:00",
-            "end": "2025-11-15T10:25:00",
+            "title": "Proyecto (Pomodoro 1)",
+            "start": "2025-11-14T14:30:00",
+            "end": "2025-11-14T14:55:00",
             "backgroundColor": "#0d6efd",
             "borderColor": "#0d6efd"
           }
           </TASK_SCHEDULE>
           <TASK_SCHEDULE>
           {
-            "title": "Proyecto - Parte 2",
-            "start": "2025-11-16T11:00:00",
-            "end": "2025-11-16T11:25:00",
+            "title": "Descanso",
+            "start": "2025-11-14T14:55:00",
+            "end": "2025-11-14T15:00:00",
+            "backgroundColor": "#28a745",
+            "borderColor": "#28a745"
+          }
+          </TASK_SCHEDULE>
+          <TASK_SCHEDULE>
+          {
+            "title": "Proyecto (Pomodoro 2)",
+            "start": "2025-11-14T15:00:00",
+            "end": "2025-11-14T15:25:00",
             "backgroundColor": "#0d6efd",
             "borderColor": "#0d6efd"
           }
@@ -81,7 +92,7 @@ app.post("/api/chat", async (req, res) => {
   // El CLIENTE (app.js) es responsable de inyectar la fecha en el historial.
   // Pasamos el historial tal cual nos llega.
   const payload = {
-    contents: history, 
+    contents: history,
     system_instruction: systemInstruction,
   };
 

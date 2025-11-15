@@ -331,21 +331,26 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         saveCurrentSession(); // Guardar inmediatamente
 
-        // --- ¡LÓGICA DE FECHA ESTABLE! ---
-        const hoy = new Date().toLocaleDateString('es-ES', { 
+        // --- ¡LÓGICA DE FECHA Y HORA ESTABLE! ---
+        const ahora = new Date();
+        const fechaHoraActual = ahora.toLocaleString('es-ES', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
-            day: 'numeric'
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            timeZone: 'America/Lima' // Asegúrate que coincida con tu zona horaria
         });
         
         const dateContextMessage = {
           role: 'user', 
-          parts: [{ text: `(Contexto importante del sistema: La fecha de hoy es ${hoy}. Todos los cálculos de tiempo como "mañana" o "viernes" deben basarse en esta fecha.)` }]
+          parts: [{ text: `(Contexto importante del sistema: La fecha y hora actual es ${fechaHoraActual}. Todos los cálculos de tiempo... deben basarse en esta fecha y hora.)` }]
         };
         
+        // Inyectamos el contexto de fecha/hora al principio del historial que enviamos
         const historyForAPI = [dateContextMessage, ...chatHistory];
-        // --- FIN DE LÓGICA DE FECHA ---
+        // --- FIN DE LÓGICA DE FECHA Y HORA ---
 
         try {
             const response = await fetch('/api/chat', {
@@ -540,8 +545,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentSessionId = conv.id;
                 chatHistory = conv.messages;
                 chatbox.innerHTML = '';
-                chatHistory.forEach((msg, idx) => {
-                    // No saltar el primer mensaje, mostrar todo
+                chatHistory.forEach((msg) => {
+                    // Ya no saltamos el primer mensaje, el historial es el historial
                     addMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai');
                 });
                 saveCurrentSession();
