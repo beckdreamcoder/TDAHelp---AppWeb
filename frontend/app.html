@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente Virtual</title>
+    <title>TDAHelp - Asistente Virtual</title>
     
     <link rel="stylesheet" href="/css/style.css">
     <!-- Font Awesome (icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6O3X6kQq5+0Q6xZ6zG2g3p6J6q7b5x9Yb1JQ2X6v6Q3u5/3q9y0rQZ0N1uE3a2K4s7x9D2f7g3h6k8l5m2n==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
     
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 </head>
@@ -17,7 +17,7 @@
         <nav class="sidebar">
             <div class="sidebar-profile">
                 <img src="/images/IconoRobot.png" alt="Avatar">
-                <span>Asistente Virtual</span>
+                <span id="sidebar-username"><b>TDAHelp</b></span>
             </div>
             <ul>
                 <li class="active" id="nav-chat">
@@ -31,14 +31,15 @@
             <div class="sidebar-logout">
                 <a href="#" id="nav-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
             </div>
-            
         </nav>
 
         <main class="main-content">
 
+            <!-- CHAT VIEW -->
             <div id="chat-view" class="view active">
                 <header class="chat-header">
-                    <h2>Hola! Usuario</h2> <p>Tus tareas</p>
+                    <h2 id="header-username">Hola! Usuario</h2>
+                    <p>Tus tareas</p>
                 </header>
                 
                 <div class="chat-view-body">
@@ -46,8 +47,7 @@
                     <div class="chat-container">
                         <h3 class="chat-widget-title">Asistente Virtual</h3>
                         
-                        <div id="chatbox">
-                            </div>
+                        <div id="chatbox"></div>
                         
                         <form id="chat-form" class="chat-input-form">
                             <input type="text" id="user-input" placeholder="¿En qué más te puedo ayudar?" autocomplete="off">
@@ -64,6 +64,7 @@
                 </div>
             </div>
 
+            <!-- CALENDAR VIEW -->
             <div id="calendar-view" class="view">
                 <header class="chat-header">
                     <h2>Todas tus tareas</h2>
@@ -75,6 +76,7 @@
                 </div>
             </div>
 
+            <!-- HISTORY VIEW -->
             <div id="history-view" class="view">
                 <header class="chat-header">
                     <h2>Historial de Conversaciones</h2>
@@ -86,7 +88,9 @@
                         <p class="history-empty">No hay conversaciones guardadas aún.</p>
                     </div>
                     <div class="history-detail" id="historyDetail">
-                        <p style="text-align: center; color: #999; margin-top: 2rem;">Selecciona una conversación para ver los detalles</p>
+                        <p style="text-align: center; color: #999; margin-top: 2rem;">
+                            Selecciona una conversación para ver los detalles
+                        </p>
                     </div>
                 </div>
             </div>
@@ -94,7 +98,7 @@
         </main>
     </div>
 
-    <!-- Modal para crear tarea (mejor UX que prompt/alert) -->
+    <!-- Modal -->
     <div id="taskModal" class="task-modal" aria-hidden="true">
         <div class="task-modal-backdrop"></div>
         <div class="task-modal-panel">
@@ -127,8 +131,7 @@
         </div>
     </div>
 
-    <!-- Toast sutil para mensajes -->
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="toast" class="toast"></div>
 
     <script src="/js/app.js"></script>
 </body>
