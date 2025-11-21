@@ -1,29 +1,27 @@
-// /js/app.js
-
-import { setupHeaderAndSidebar } from "./auth.js";
-import { initChat, startNewConversation } from "./chat.js";
-import { cargarTareas, initTaskModal } from "./tasks.js";
-import { initCalendar, setupCalendarFilters } from "./calendar.js";
+// app.js (punto de entrada ES Module)
+import { initAuthHeader } from "./auth.js";
+import { cargarTareas } from "./tasks.js";
+import { initCalendar } from "./calendar.js";
+import { initHistory } from "./history.js";
+import { initChat } from "./chat.js";
 import { initNavigation } from "./navigation.js";
 
-// 1. Header y sidebar para el usuario actual
-setupHeaderAndSidebar();
+document.addEventListener("DOMContentLoaded", () => {
+  // Datos de usuario
+  initAuthHeader();
 
-// 2. Cargar tareas desde localStorage
-cargarTareas();
+  // Tareas guardadas
+  cargarTareas();
 
-// 3. Inicializar calendario y filtros
-initCalendar();
-setupCalendarFilters();
+  // Historial (DOM refs)
+  initHistory();
 
-// 4. Inicializar chat e historial
-initChat();
+  // Calendario + filtros
+  initCalendar();
 
-// 5. Modal de tareas (queda disponible aunque no haya botón visible)
-initTaskModal();
+  // Chat IA + conversación inicial
+  initChat();
 
-// 6. Navegación entre vistas
-initNavigation();
-
-// 7. Crear primera conversación con saludo del asistente
-startNewConversation();
+  // Navegación entre vistas
+  initNavigation();
+});

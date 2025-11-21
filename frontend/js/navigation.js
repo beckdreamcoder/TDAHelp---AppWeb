@@ -1,9 +1,5 @@
-// /js/navigation.js
-
+// frontend/js/navigation.js
 import { renderHistoryList } from "./history.js";
-import { refreshCalendar } from "./calendar.js";
-import { startNewConversation } from "./chat.js";
-import { showToast } from "./utils.js";
 
 function initNavigation() {
   const navChat = document.getElementById("nav-chat");
@@ -14,34 +10,31 @@ function initNavigation() {
   const calendarView = document.getElementById("calendar-view");
   const historyView = document.getElementById("history-view");
 
-  const btnNuevaConversacion = document.getElementById(
-    "btn-nueva-conversacion"
-  );
   const btnVerHistorial = document.getElementById("btn-ver-historial");
 
-  if (navCalendar && navChat && chatView && calendarView && historyView) {
+  if (navCalendar && chatView && calendarView && historyView) {
     navCalendar.addEventListener("click", (e) => {
       e.preventDefault();
-
       chatView.classList.remove("active");
       historyView.classList.remove("active");
       calendarView.classList.add("active");
 
-      navChat.classList.remove("active");
-      navCalendar.classList.add("active");
-
-      refreshCalendar();
+      if (navChat && navCalendar) {
+        navChat.classList.remove("active");
+        navCalendar.classList.add("active");
+      }
     });
+  }
 
+  if (navChat && chatView && calendarView && historyView) {
     navChat.addEventListener("click", (e) => {
       e.preventDefault();
-
       calendarView.classList.remove("active");
       historyView.classList.remove("active");
       chatView.classList.add("active");
 
-      navCalendar.classList.remove("active");
       navChat.classList.add("active");
+      if (navCalendar) navCalendar.classList.remove("active");
     });
   }
 
@@ -49,13 +42,6 @@ function initNavigation() {
     navLogout.addEventListener("click", () => {
       localStorage.removeItem("currentUser");
       window.location.href = "index.html";
-    });
-  }
-
-  if (btnNuevaConversacion) {
-    btnNuevaConversacion.addEventListener("click", () => {
-      startNewConversation();
-      showToast("Nueva conversación iniciada");
     });
   }
 

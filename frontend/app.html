@@ -1,177 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDAHelp - Asistente Virtual</title>
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- Font Awesome (icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
-    
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TDAHelp - Asistente Virtual</title>
+
+  <!-- CSS principal (ya importa el resto o convive con los otros .css) -->
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <!-- Font Awesome (icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
+  />
+
+  <!-- FullCalendar -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 </head>
 <body>
-    
-    <div class="app-container">
-        <!-- SIDEBAR -->
-        <nav class="sidebar">
-            <div class="sidebar-profile">
-                <img src="/images/IconoRobot.png" alt="Avatar">
-                <span id="sidebar-username"><b>TDAHelp</b></span>
-            </div>
-            <ul class="sidebar-menu">
-                <li class="active" id="nav-chat">
-                    <a href="#"><i class="fa-solid fa-comment-dots"></i> Asistente Virtual</a>
-                </li>
-                <li id="nav-calendar">
-                    <a href="#"><i class="fa-solid fa-calendar-days"></i> Horarios</a>
-                </li>
-            </ul>
+  <div class="app-container">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-profile">
+        <img src="/images/IconoRobot.png" alt="Avatar" />
+        <span id="sidebar-username"><b>TDAHelp</b></span>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="active" id="nav-chat">
+          <a href="#"><i class="fa-solid fa-comment-dots"></i> Asistente Virtual</a>
+        </li>
+        <li id="nav-calendar">
+          <a href="#"><i class="fa-solid fa-calendar-days"></i> Horarios</a>
+        </li>
+      </ul>
 
-            <div class="sidebar-logout">
-                <a href="#" id="nav-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión</a>
-            </div>
-        </nav>
+      <div class="sidebar-logout">
+        <a href="#" id="nav-logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+        </a>
+      </div>
+    </nav>
 
-        <!-- MAIN -->
-        <main class="main-content">
+    <!-- MAIN -->
+    <main class="main-content">
+      <!-- CHAT VIEW -->
+      <div id="chat-view" class="view active">
+        <header class="chat-header">
+          <div>
+            <h2 id="header-username">¡Hola! Usuario</h2>
+            <p>Tus tareas</p>
+          </div>
+        </header>
 
-            <!-- CHAT VIEW -->
-            <div id="chat-view" class="view active">
-                <header class="chat-header">
-                    <div>
-                        <h2 id="header-username">¡Hola! Usuario</h2>
-                        <p>Tus tareas</p>
-                    </div>
-                </header>
-                
-                <div class="chat-view-body">
-                
-                    <div class="chat-container">
-                        <h3 class="chat-widget-title">Asistente Virtual</h3>
-                        
-                        <div id="chatbox" class="chatbox"></div>
-                        
-                        <form id="chat-form" class="chat-input-form">
-                            <input
-                                type="text"
-                                id="user-input"
-                                placeholder="¿En qué más te puedo ayudar?"
-                                autocomplete="off"
-                                aria-label="Escribe tu mensaje al asistente"
-                            >
-                            <button type="submit" id="send-btn" aria-label="Enviar mensaje">
-                                <i class="fa-solid fa-paper-plane"></i>
-                            </button>
-                        </form>
-                        <p class="chat-tip">
-                            Consejo TDAH: escribe solo una cosa a la vez. El asistente la dividirá en pasos por ti. 🧠
-                        </p>
-                    </div>
+        <div class="chat-view-body">
+          <div class="chat-container">
+            <h3 class="chat-widget-title">Asistente Virtual</h3>
 
-                    <div class="chat-actions-sidebar">
-                        <button class="btn-action" id="btn-nueva-conversacion">Nueva Conversación</button>
-                        <button class="btn-action" id="btn-ver-historial">Ver Historial</button>
-                    </div>
+            <div id="chatbox" class="chatbox"></div>
 
-                </div>
-            </div>
-
-            <!-- CALENDAR VIEW -->
-            <div id="calendar-view" class="view">
-                <header class="chat-header">
-                    <div>
-                        <h2>Todas tus tareas</h2>
-                        <p>Horario de Tareas</p>
-                    </div>
-                </header>
-                
-                <div class="calendar-toolbar">
-                    <div class="calendar-legend">
-                        <span class="legend-item legend-educacion">Educación</span>
-                        <span class="legend-item legend-trabajo">Trabajo</span>
-                        <span class="legend-item legend-familia">Familia</span>
-                        <span class="legend-item legend-salud">Salud</span>
-                        <span class="legend-item legend-rutina">Rutina</span>
-                        <span class="legend-item legend-general">General</span>
-                    </div>
-                    <div class="calendar-filters">
-                        <button class="filter-btn active" data-category="ALL">Todas</button>
-                        <button class="filter-btn" data-category="Educación">Educación</button>
-                        <button class="filter-btn" data-category="Trabajo">Trabajo</button>
-                        <button class="filter-btn" data-category="Familia">Familia</button>
-                        <button class="filter-btn" data-category="Salud">Salud</button>
-                        <button class="filter-btn" data-category="Rutina">Rutina</button>
-                        <button class="filter-btn" data-category="General">General</button>
-                    </div>
-                </div>
-
-                <div class="calendar-container">
-                    <div id="calendar"></div>
-                </div>
-            </div>
-
-            <!-- HISTORY VIEW -->
-            <div id="history-view" class="view">
-                <header class="chat-header">
-                    <div>
-                        <h2>Historial de Conversaciones</h2>
-                        <p>Tus chats anteriores</p>
-                    </div>
-                </header>
-                
-                <div class="history-container">
-                    <div class="history-list" id="historyList">
-                        <p class="history-empty">No hay conversaciones guardadas aún.</p>
-                    </div>
-                    <div class="history-detail" id="historyDetail">
-                        <p class="history-placeholder">
-                            Selecciona una conversación para ver los detalles.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <!-- MODAL AGREGAR TAREA -->
-    <div id="taskModal" class="task-modal" aria-hidden="true">
-        <div class="task-modal-backdrop"></div>
-        <div class="task-modal-panel" role="dialog" aria-modal="true">
-            <h3>Agregar nueva tarea</h3>
-            <form id="taskModalForm" class="task-modal-form">
-                <label for="modal-title">Título</label>
-                <input id="modal-title" type="text" required placeholder="Ej: Estudiar derivadas">
-
-                <div class="row">
-                    <div class="col">
-                        <label for="modal-date">Fecha</label>
-                        <input id="modal-date" type="date" required>
-                    </div>
-                    <div class="col">
-                        <label for="modal-time">Hora</label>
-                        <input id="modal-time" type="time" required>
-                    </div>
-                </div>
-
-                <label for="modal-duration">Duración (min)</label>
-                <input id="modal-duration" type="number" min="5" step="5" value="25">
-
-                <p id="taskModalError" class="task-modal-error" aria-live="polite"></p>
-
-                <div class="task-modal-actions">
-                    <button type="button" id="taskModalCancel" class="btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn-primary">Guardar</button>
-                </div>
+            <form id="chat-form" class="chat-input-form">
+              <input
+                type="text"
+                id="user-input"
+                placeholder="¿En qué más te puedo ayudar?"
+                autocomplete="off"
+                aria-label="Escribe tu mensaje al asistente"
+              />
+              <button type="submit" id="send-btn" aria-label="Enviar mensaje">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
             </form>
+            <p class="chat-tip">
+              Consejo TDAH: escribe solo una cosa a la vez. El asistente la dividirá en pasos por ti. 🧠
+            </p>
+          </div>
+
+          <div class="chat-actions-sidebar">
+            <button class="btn-action" id="btn-nueva-conversacion">
+              Nueva Conversación
+            </button>
+            <!-- Botón “Agregar Tarea” ELIMINADO -->
+            <button class="btn-action" id="btn-ver-historial">Ver Historial</button>
+          </div>
         </div>
+      </div>
+
+      <!-- CALENDAR VIEW -->
+      <div id="calendar-view" class="view">
+        <header class="chat-header">
+          <div>
+            <h2>Todas tus tareas</h2>
+            <p>Horario de Tareas</p>
+          </div>
+        </header>
+
+        <div class="calendar-categories">
+
+          <button class="cat-btn active" data-category="ALL">
+            <span class="circle circle-all"></span> Todas
+          </button>
+
+          <button class="cat-btn" data-category="Educación">
+            <span class="circle circle-educacion"></span> Educación
+          </button>
+
+          <button class="cat-btn" data-category="Trabajo">
+            <span class="circle circle-trabajo"></span> Trabajo
+          </button>
+
+          <button class="cat-btn" data-category="Familia">
+            <span class="circle circle-familia"></span> Familia
+          </button>
+
+          <button class="cat-btn" data-category="Salud">
+            <span class="circle circle-salud"></span> Salud
+          </button>
+
+          <button class="cat-btn" data-category="Rutina">
+            <span class="circle circle-rutina"></span> Rutina
+          </button>
+
+          <button class="cat-btn" data-category="General">
+            <span class="circle circle-general"></span> General
+          </button>
+
+        </div>
+
+        <div class="calendar-container">
+          <div id="calendar"></div>
+        </div>
+      </div>
+
+      <!-- HISTORY VIEW -->
+      <div id="history-view" class="view">
+        <header class="chat-header">
+          <div>
+            <h2>Historial de Conversaciones</h2>
+            <p>Tus chats anteriores</p>
+          </div>
+        </header>
+
+        <div class="history-container">
+          <div class="history-list" id="historyList">
+            <p class="history-empty">No hay conversaciones guardadas aún.</p>
+          </div>
+          <div class="history-detail" id="historyDetail">
+            <p class="history-placeholder">
+              Selecciona una conversación para ver los detalles.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL AGREGAR TAREA (solo para uso futuro / no hay botón directo) -->
+  <div id="taskModal" class="task-modal" aria-hidden="true">
+    <div class="task-modal-backdrop"></div>
+    <div class="task-modal-panel" role="dialog" aria-modal="true">
+      <h3>Agregar nueva tarea</h3>
+      <form id="taskModalForm" class="task-modal-form">
+        <label for="modal-title">Título</label>
+        <input id="modal-title" type="text" required placeholder="Ej: Estudiar derivadas" />
+
+        <div class="row">
+          <div class="col">
+            <label for="modal-date">Fecha</label>
+            <input id="modal-date" type="date" required />
+          </div>
+          <div class="col">
+            <label for="modal-time">Hora</label>
+            <input id="modal-time" type="time" required />
+          </div>
+        </div>
+
+        <label for="modal-duration">Duración (min)</label>
+        <input id="modal-duration" type="number" min="5" step="5" value="25" />
+
+        <p id="taskModalError" class="task-modal-error" aria-live="polite"></p>
+
+        <div class="task-modal-actions">
+          <button type="button" id="taskModalCancel" class="btn-secondary">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- TOAST -->
-    <div id="toast" class="toast"></div>
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
 
-   <script type="module" src="/js/app.js"></script>
+  <!-- 🔥 ES MODULE -->
+<script type="module" src="./js/app.js"></script>
+
 </body>
 </html>

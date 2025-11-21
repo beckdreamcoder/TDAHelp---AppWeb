@@ -1,105 +1,138 @@
-/* ================================
-   CHAT — Vista de chat
-   ================================ */
+/* chat.css */
 
+/* Contenedor general del cuerpo de la vista de chat */
 .chat-view-body {
-    display: grid;
-    grid-template-columns: minmax(0, 1.7fr) 260px;
-    gap: 1.5rem;
-    height: calc(100vh - 140px);
-    padding: 1.5rem 2rem;
+  display: flex;
+  flex: 1;
+  padding: 2rem;
+  gap: 1.5rem;
+  overflow: hidden;
 }
 
-/* Chat principal */
+/* Caja gris grande */
 .chat-container {
-    background-color: #f9fafb;
-    border-radius: 1.5rem;
-    padding: 1.25rem 1.5rem 1.1rem;
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.04);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #eef2ff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
 }
 
-/* Chatbox */
+/* Chatbox blanco scrollable */
 .chatbox {
-    flex: 1;
-    overflow-y: auto;
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-/* Input */
+/* Input + botón enviar */
 .chat-input-form {
-    display: flex;
-    margin-top: 1rem;
-    border: 1px solid #ced4da;
-    background: #fff;
-    border-radius: 8px;
-    padding: 0.5rem;
+  display: flex;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 0.4rem 0.5rem;
+  margin-top: 1rem;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
 }
 
 .chat-input-form input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding-left: 0.5rem;
-    font-size: 0.95rem;
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+  background: transparent;
 }
 
-/* Botón enviar */
 .chat-input-form button {
-    width: 42px;
-    border: none;
-    background: #7c4dff;
-    color: white;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
+  background: radial-gradient(circle at 20% 20%, #a855f7, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  box-shadow: 0 10px 25px rgba(129, 140, 248, 0.6);
+}
+
+.chat-input-form button:hover {
+  filter: brightness(1.08);
+}
+
+/* Mensaje consejo */
+.chat-tip {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
 /* Mensajes */
 .chat-message {
-    display: flex;
+  max-width: 80%;
 }
 
+.chat-message p {
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-radius: 16px;
+  line-height: 1.45;
+}
+
+/* AI izquierda */
+.ai-message {
+  align-self: flex-start;
+}
 .ai-message p {
-    background: #f1f3f5;
-    padding: 0.8rem 1rem;
-    border-radius: 16px 16px 16px 0;
+  background-color: #eff6ff;
+  color: #111827;
+  border-top-left-radius: 4px;
 }
 
+/* Usuario derecha */
 .user-message {
-    justify-content: flex-end;
+  align-self: flex-end;
 }
-
 .user-message p {
-    background: #0d6efd;
-    color: white;
-    padding: 0.8rem 1rem;
-    border-radius: 16px 16px 0 16px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-top-right-radius: 4px;
 }
 
-/* Panel derecho */
+/* Columna derecha (botones) */
 .chat-actions-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 200px;
 }
 
 .btn-action {
-    padding: 1rem;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.15s, box-shadow 0.15s;
 }
 
 .btn-action:hover {
-    background: #f8f9fa;
+  background-color: #f3f4ff;
+  box-shadow: 0 8px 20px rgba(148, 163, 184, 0.35);
 }

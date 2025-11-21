@@ -1,20 +1,18 @@
 // /js/calendar.js
 
-import { getAllTasks, setCalendar as registerCalendarInTasks } from "./tasks.js";
+import { getAllTasks, registerCalendarInstance } from "./tasks.js";
 
 let calendar = null;
 let categoriaActiva = "ALL";
 
+// ======================================================
+// APLICAR FILTRO VISUAL POR CATEGORÍA
+// ======================================================
 function aplicarFiltroCalendario() {
   if (!calendar) return;
-  const eventos = calendar.getEvents();
 
-  eventos.forEach((ev) => {
-    const cat =
-      ev.extendedProps.categoria ||
-      ev.extendedProps.category ||
-      ev.extendedProps.categoria;
-
+  calendar.getEvents().forEach((ev) => {
+    const cat = ev.extendedProps.categoria;
     const mostrar =
       categoriaActiva === "ALL" || (cat && cat === categoriaActiva);
 
@@ -22,9 +20,27 @@ function aplicarFiltroCalendario() {
   });
 }
 
+// ======================================================
+// INICIALIZAR CALENDARIO
+// ======================================================
 function initCalendar() {
   const calendarEl = document.getElementById("calendar");
   if (!calendarEl) return;
+
+  // 🔥 Convertimos tareas → eventos FullCalendar
+  const eventos = getAllTasks().map((t) => ({
+    id: t.id,
+    title: t.title,
+    start: t.start,
+    end: t.end,
+    backgroundColor: t.backgroundColor, // ✔ color correcto
+    borderColor: t.borderColor,         // ✔ borde correcto
+    textColor: "#ffffff",
+    categoria: t.categoria,             // ✔ categoría para filtro
+    extendedProps: {
+      categoria: t.categoria,
+    },
+  }));
 
   calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "timeGridWeek",
@@ -52,23 +68,19 @@ function initCalendar() {
       list: "Agenda",
     },
 
-    events: getAllTasks(),
+    events: eventos,
+
     editable: true,
 
     eventClick(info) {
       const ok = confirm(`¿Eliminar "${info.event.title}"?`);
       if (!ok) return;
 
-      const id = info.event.id;
-      // Ojo: los datos en localStorage se actualizan desde tasks.js;
-      // aquí solo removemos del calendario.
       info.event.remove();
-      // El borrado real de allTasks lo gestiona tasks.js si lo deseas extender
-      alert("Tarea eliminada del calendario (falta sync de storage si lo necesitas aquí).");
     },
   });
 
-  registerCalendarInTasks(calendar);
+  registerCalendarInstance(calendar);
 
   setTimeout(() => {
     calendar.render();
@@ -77,6 +89,7 @@ function initCalendar() {
   }, 100);
 }
 
+// ======================================================
 function setupCalendarFilters() {
   const filterButtons = document.querySelectorAll(".filter-btn");
   if (!filterButtons.length) return;
@@ -84,13 +97,16 @@ function setupCalendarFilters() {
   filterButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       filterButtons.forEach((b) => b.classList.remove("active"));
+
       btn.classList.add("active");
       categoriaActiva = btn.dataset.category;
+
       aplicarFiltroCalendario();
     });
   });
 }
 
+// ======================================================
 function refreshCalendar() {
   if (!calendar) return;
   calendar.render();

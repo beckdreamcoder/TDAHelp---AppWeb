@@ -1,5 +1,3 @@
-// /js/history.js
-
 import { CONVERSATIONS_KEY } from "./auth.js";
 
 let conversations =
@@ -16,9 +14,22 @@ function createNewConversation() {
     createdAt: new Date().toISOString(),
     messages: [],
   };
-  // No la pusimos en la lista todavía, solo cuando tenga mensajes
   return currentConversation;
 }
+
+function startNewConversation() {
+  // Crear una nueva conversación
+  currentConversation = {
+    id: "conv_" + Date.now(),
+    createdAt: new Date().toISOString(),
+    messages: [],
+  };
+
+  ensureConversationRegistered();
+  return currentConversation;
+}
+
+
 
 function ensureConversationRegistered() {
   if (!currentConversation) return;
@@ -38,6 +49,18 @@ function logMessageToConversation(sender, text) {
     text,
     timestamp: new Date().toISOString(),
   });
+  ensureConversationRegistered();
+}
+
+function addMessageToCurrentConversation(sender, text) {
+  if (!currentConversation) return;
+
+  currentConversation.messages.push({
+    sender,
+    text,
+    timestamp: new Date().toISOString(),
+  });
+
   ensureConversationRegistered();
 }
 
@@ -124,8 +147,27 @@ function renderHistoryList() {
   });
 }
 
+
+function initHistory() {
+  // Resetea vistas al entrar
+  const historyView = document.getElementById("history-view");
+  const chatView = document.getElementById("chat-view");
+  const calendarView = document.getElementById("calendar-view");
+
+  if (!historyView || !chatView || !calendarView) return;
+
+  // Ocultamos historial de inicio, se muestra solo al hacer click
+  historyView.classList.remove("active");
+
+  // Cargar lista si ya existen conversaciones
+  renderHistoryList();
+}
+
 export {
   createNewConversation,
   logMessageToConversation,
   renderHistoryList,
+  addMessageToCurrentConversation,
+  startNewConversation,
+  initHistory
 };
