@@ -4,39 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDAHelp - Iniciar Sesión</title>
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="./css/login.css">
 </head>
 <body class="login-page">
     <div class="login-container">
         <div class="login-image-side">
-            <!-- Image carousel -->
             <div class="carousel" id="heroCarousel">
                 <div class="carousel-track">
                     <div class="carousel-slide active">
-                        <img src="/images/Carrusel_1.webp" alt="Imagen 1">
+                        <img src="./images/Carrusel_1.webp" alt="Imagen 1">
                     </div>
                     <div class="carousel-slide">
-                        <img src="/images/Carrusel_2.png" alt="Imagen 2">
+                        <img src="./images/Carrusel_2.png" alt="Imagen 2">
                     </div>
                     <div class="carousel-slide">
-                        <img src="/images/Carrusel_3.png" alt="Imagen 3">
+                        <img src="./images/Carrusel_3.png" alt="Imagen 3">
                     </div>
                 </div>
 
                 <button class="carousel-control prev" aria-label="Anterior">&#10094;</button>
                 <button class="carousel-control next" aria-label="Siguiente">&#10095;</button>
 
-                <div class="carousel-indicators" aria-hidden="false">
+                <div class="carousel-indicators">
                     <button class="indicator active" data-slide="0"></button>
                     <button class="indicator" data-slide="1"></button>
                     <button class="indicator" data-slide="2"></button>
                 </div>
             </div>
-            <!-- /Image carousel -->
         </div>
+
         <div class="login-form-side">
             <div class="login-form-wrapper">
-                <img src="/images/IconoRobot.png" alt="Avatar" class="login-avatar">
+                <img src="./images/IconoRobot.png" alt="Avatar" class="login-avatar">
                 <h2>TDAHelp</h2>
                 <h3>Iniciar Sesión</h3>
                 
@@ -59,7 +58,8 @@
         </div>
     </div>
 
-    <script src="/js/script.js"></script>
+    <script src="./js/script.js"></script>
+
     <script>
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
