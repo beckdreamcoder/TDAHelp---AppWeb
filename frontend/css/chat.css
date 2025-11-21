@@ -1,0 +1,105 @@
+/* ================================
+   CHAT — Vista de chat
+   ================================ */
+
+.chat-view-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) 260px;
+    gap: 1.5rem;
+    height: calc(100vh - 140px);
+    padding: 1.5rem 2rem;
+}
+
+/* Chat principal */
+.chat-container {
+    background-color: #f9fafb;
+    border-radius: 1.5rem;
+    padding: 1.25rem 1.5rem 1.1rem;
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Chatbox */
+.chatbox {
+    flex: 1;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Input */
+.chat-input-form {
+    display: flex;
+    margin-top: 1rem;
+    border: 1px solid #ced4da;
+    background: #fff;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.chat-input-form input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding-left: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Botón enviar */
+.chat-input-form button {
+    width: 42px;
+    border: none;
+    background: #7c4dff;
+    color: white;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Mensajes */
+.chat-message {
+    display: flex;
+}
+
+.ai-message p {
+    background: #f1f3f5;
+    padding: 0.8rem 1rem;
+    border-radius: 16px 16px 16px 0;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.user-message p {
+    background: #0d6efd;
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 16px 16px 0 16px;
+}
+
+/* Panel derecho */
+.chat-actions-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-action {
+    padding: 1rem;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-action:hover {
+    background: #f8f9fa;
+}

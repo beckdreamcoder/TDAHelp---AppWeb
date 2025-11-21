@@ -9,17 +9,18 @@
     <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
     
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 </head>
 <body>
     
     <div class="app-container">
+        <!-- SIDEBAR -->
         <nav class="sidebar">
             <div class="sidebar-profile">
                 <img src="/images/IconoRobot.png" alt="Avatar">
                 <span id="sidebar-username"><b>TDAHelp</b></span>
             </div>
-            <ul>
+            <ul class="sidebar-menu">
                 <li class="active" id="nav-chat">
                     <a href="#"><i class="fa-solid fa-comment-dots"></i> Asistente Virtual</a>
                 </li>
@@ -33,13 +34,16 @@
             </div>
         </nav>
 
+        <!-- MAIN -->
         <main class="main-content">
 
             <!-- CHAT VIEW -->
             <div id="chat-view" class="view active">
                 <header class="chat-header">
-                    <h2 id="header-username">Hola! Usuario</h2>
-                    <p>Tus tareas</p>
+                    <div>
+                        <h2 id="header-username">¡Hola! Usuario</h2>
+                        <p>Tus tareas</p>
+                    </div>
                 </header>
                 
                 <div class="chat-view-body">
@@ -47,17 +51,27 @@
                     <div class="chat-container">
                         <h3 class="chat-widget-title">Asistente Virtual</h3>
                         
-                        <div id="chatbox"></div>
+                        <div id="chatbox" class="chatbox"></div>
                         
                         <form id="chat-form" class="chat-input-form">
-                            <input type="text" id="user-input" placeholder="¿En qué más te puedo ayudar?" autocomplete="off">
-                            <button type="submit" id="send-btn">➤</button>
+                            <input
+                                type="text"
+                                id="user-input"
+                                placeholder="¿En qué más te puedo ayudar?"
+                                autocomplete="off"
+                                aria-label="Escribe tu mensaje al asistente"
+                            >
+                            <button type="submit" id="send-btn" aria-label="Enviar mensaje">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
                         </form>
+                        <p class="chat-tip">
+                            Consejo TDAH: escribe solo una cosa a la vez. El asistente la dividirá en pasos por ti. 🧠
+                        </p>
                     </div>
 
                     <div class="chat-actions-sidebar">
                         <button class="btn-action" id="btn-nueva-conversacion">Nueva Conversación</button>
-                        <button class="btn-action" id="btn-agregar-tarea">Agregar Tarea</button>
                         <button class="btn-action" id="btn-ver-historial">Ver Historial</button>
                     </div>
 
@@ -67,10 +81,32 @@
             <!-- CALENDAR VIEW -->
             <div id="calendar-view" class="view">
                 <header class="chat-header">
-                    <h2>Todas tus tareas</h2>
-                    <p>Horario de Tareas</p>
+                    <div>
+                        <h2>Todas tus tareas</h2>
+                        <p>Horario de Tareas</p>
+                    </div>
                 </header>
                 
+                <div class="calendar-toolbar">
+                    <div class="calendar-legend">
+                        <span class="legend-item legend-educacion">Educación</span>
+                        <span class="legend-item legend-trabajo">Trabajo</span>
+                        <span class="legend-item legend-familia">Familia</span>
+                        <span class="legend-item legend-salud">Salud</span>
+                        <span class="legend-item legend-rutina">Rutina</span>
+                        <span class="legend-item legend-general">General</span>
+                    </div>
+                    <div class="calendar-filters">
+                        <button class="filter-btn active" data-category="ALL">Todas</button>
+                        <button class="filter-btn" data-category="Educación">Educación</button>
+                        <button class="filter-btn" data-category="Trabajo">Trabajo</button>
+                        <button class="filter-btn" data-category="Familia">Familia</button>
+                        <button class="filter-btn" data-category="Salud">Salud</button>
+                        <button class="filter-btn" data-category="Rutina">Rutina</button>
+                        <button class="filter-btn" data-category="General">General</button>
+                    </div>
+                </div>
+
                 <div class="calendar-container">
                     <div id="calendar"></div>
                 </div>
@@ -79,8 +115,10 @@
             <!-- HISTORY VIEW -->
             <div id="history-view" class="view">
                 <header class="chat-header">
-                    <h2>Historial de Conversaciones</h2>
-                    <p>Tus chats anteriores</p>
+                    <div>
+                        <h2>Historial de Conversaciones</h2>
+                        <p>Tus chats anteriores</p>
+                    </div>
                 </header>
                 
                 <div class="history-container">
@@ -88,8 +126,8 @@
                         <p class="history-empty">No hay conversaciones guardadas aún.</p>
                     </div>
                     <div class="history-detail" id="historyDetail">
-                        <p style="text-align: center; color: #999; margin-top: 2rem;">
-                            Selecciona una conversación para ver los detalles
+                        <p class="history-placeholder">
+                            Selecciona una conversación para ver los detalles.
                         </p>
                     </div>
                 </div>
@@ -98,14 +136,14 @@
         </main>
     </div>
 
-    <!-- Modal -->
+    <!-- MODAL AGREGAR TAREA -->
     <div id="taskModal" class="task-modal" aria-hidden="true">
         <div class="task-modal-backdrop"></div>
-        <div class="task-modal-panel">
+        <div class="task-modal-panel" role="dialog" aria-modal="true">
             <h3>Agregar nueva tarea</h3>
             <form id="taskModalForm" class="task-modal-form">
                 <label for="modal-title">Título</label>
-                <input id="modal-title" type="text" required placeholder="Ej: Estudiar Fases">
+                <input id="modal-title" type="text" required placeholder="Ej: Estudiar derivadas">
 
                 <div class="row">
                     <div class="col">
@@ -119,20 +157,21 @@
                 </div>
 
                 <label for="modal-duration">Duración (min)</label>
-                <input id="modal-duration" type="number" min="1" value="25">
+                <input id="modal-duration" type="number" min="5" step="5" value="25">
 
                 <p id="taskModalError" class="task-modal-error" aria-live="polite"></p>
 
                 <div class="task-modal-actions">
-                    <button type="button" id="taskModalCancel" class="btn-action">Cancelar</button>
+                    <button type="button" id="taskModalCancel" class="btn-secondary">Cancelar</button>
                     <button type="submit" class="btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
-    <script src="/js/app.js"></script>
+   <script type="module" src="/js/app.js"></script>
 </body>
 </html>

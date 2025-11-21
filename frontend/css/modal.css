@@ -1,0 +1,63 @@
+/* ================================
+   MODAL — agregar tarea
+   ================================ */
+
+.task-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-modal.open {
+    display: flex;
+}
+
+.task-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+}
+
+.task-modal-panel {
+    background: white;
+    padding: 1.3rem;
+    border-radius: 12px;
+    width: 420px;
+    z-index: 2;
+}
+
+.task-modal-form input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    margin-top: 0.3rem;
+}
+
+.task-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: black;
+    color: white;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}

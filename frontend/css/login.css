@@ -1,0 +1,180 @@
+/* ==================================================================================== */
+/* LOGIN & REGISTER – ESTILOS ORIGINALES COMPLETOS                                      */
+/* ==================================================================================== */
+
+body.login-page {
+    background-color: #e9ecef;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* LADO DE LA IMAGEN – CARRUSEL */
+.login-image-side {
+    flex: 1.8;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eef3f6;
+    overflow: hidden;
+}
+
+/* Carousel */
+.carousel {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+.carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.carousel-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+}
+.carousel-slide.active {
+    opacity: 1;
+}
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.06);
+    transition: transform 8s ease;
+}
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.6rem;
+    z-index: 5;
+}
+.carousel-control.prev { left: 16px; }
+.carousel-control.next { right: 16px; }
+.carousel-control:hover { background: rgba(0,0,0,0.55); }
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 6;
+}
+.carousel-indicators .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+.carousel-indicators .indicator.active {
+    background: #ffffff;
+    transform: scale(1.25);
+}
+
+/* LADO DEL FORMULARIO */
+.login-form-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.login-form-wrapper {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.login-form-wrapper h2,
+.login-form-wrapper h3 {
+    margin: 0.5rem 0;
+}
+
+.login-form-wrapper h3 {
+    font-weight: 400;
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+.login-form-wrapper form {
+    text-align: left;
+}
+
+.login-form-wrapper label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.login-form-wrapper input[type="text"],
+.login-form-wrapper input[type="password"],
+.login-form-wrapper input[type="email"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* Botón principal */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    background-color: #0d6efd;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* Sección de registro / login */
+.login-signup {
+    font-size: 0.9rem;
+    text-align: center;
+}
+.login-signup a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 600;
+}
+.login-signup a:hover {
+    text-decoration: underline;
+}
