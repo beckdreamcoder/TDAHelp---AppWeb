@@ -80,23 +80,45 @@
   color: #6b7280;
 }
 
-/* Mensajes */
+/* =========================================
+   ESTILOS DE MENSAJES (CORREGIDOS)
+   ========================================= */
+
 .chat-message {
   max-width: 80%;
+  display: flex;          /* Para alinear icono y texto lado a lado */
+  align-items: flex-end;  /* Alinear abajo o flex-start para arriba */
+  gap: 10px;              /* Espacio entre robot y texto */
 }
 
-.chat-message p {
+/* 🔥 NUEVO: Control de tamaño del avatar */
+.chat-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;         /* Evita que se aplaste */
+  margin-bottom: 5px;     /* Ajuste visual */
+}
+
+/* Estilo del GLOBO de texto (Aplica a <p> y a .message-content) */
+.chat-message p, 
+.message-content {
   margin: 0;
   padding: 0.7rem 1rem;
   border-radius: 16px;
   line-height: 1.45;
+  word-wrap: break-word; /* Evita que palabras largas rompan el diseño */
 }
 
 /* AI izquierda */
 .ai-message {
   align-self: flex-start;
 }
-.ai-message p {
+
+/* Globo gris/azul claro para la IA */
+.ai-message p, 
+.ai-message .message-content {
   background-color: #eff6ff;
   color: #111827;
   border-top-left-radius: 4px;
@@ -105,8 +127,12 @@
 /* Usuario derecha */
 .user-message {
   align-self: flex-end;
+  justify-content: flex-end; /* Alinea contenido a la derecha */
 }
-.user-message p {
+
+/* Globo azul fuerte para el Usuario */
+.user-message p, 
+.user-message .message-content {
   background-color: #2563eb;
   color: #ffffff;
   border-top-right-radius: 4px;

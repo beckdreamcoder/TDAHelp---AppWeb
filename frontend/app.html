@@ -8,6 +8,13 @@
   <!-- CSS principal (ya importa el resto o convive con los otros .css) -->
   <link rel="stylesheet" href="/css/style.css" />
 
+  <!-- CSS de estadísticas -->
+  <link rel="stylesheet" href="/css/stats.css">
+  <!-- Chart.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Código de estadísticas (módulo) -->
+  <script type="module" src="/js/stats.js"></script>
+
   <!-- Font Awesome (icons) -->
   <link
     rel="stylesheet"
@@ -33,6 +40,10 @@
         <li id="nav-calendar">
           <a href="#"><i class="fa-solid fa-calendar-days"></i> Horarios</a>
         </li>
+        <li id="nav-estadisticas">
+          <a href="#"><i class="fa-solid fa-chart-line"></i> Estadísticas</a>
+        </li>
+
       </ul>
 
       <div class="sidebar-logout">
@@ -152,8 +163,93 @@
           </div>
         </div>
       </div>
+        <!-- ================== VISTA ESTADÍSTICAS ================== -->
+      <section id="stats-view" class="view-section">
+        <div class="stats-container">
+          <header class="stats-header">
+            <h2>Estadísticas</h2>
+            <button id="btn-refresh-stats" class="btn">🔄 Actualizar</button>
+          </header>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Total de tareas</h3>
+              <p id="stat-total">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Tareas completadas</h3>
+              <p id="stat-completed">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Tareas pendientes</h3>
+              <p id="stat-pending">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>% de cumplimiento</h3>
+              <p id="stat-percent">0%</p>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-card">
+              <h4>Completadas vs Pendientes</h4>
+              <canvas id="chart-donut" width="400" height="250"></canvas>
+            </div>
+            <div class="chart-card">
+              <h4>Tareas completadas (últimos 14 días)</h4>
+              <canvas id="chart-bar" width="600" height="250"></canvas>
+            </div>
+          </div>
+
+          <div id="stats-message" class="stats-message"></div>
+        </div>
+      </section>
+
+        <!--<section id="stats-view" class="view-section">
+        <div class="stats-container">
+          <header class="stats-header">
+            <h2>Estadísticas</h2>
+            <button id="btn-refresh-stats" class="btn">🔄 Actualizar</button>
+          </header>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Total de tareas</h3>
+              <p id="stat-total">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Tareas completadas</h3>
+              <p id="stat-completed">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Tareas pendientes</h3>
+              <p id="stat-pending">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>% de cumplimiento</h3>
+              <p id="stat-percent">0%</p>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-card">
+              <h4>Completadas vs Pendientes</h4>
+              <canvas id="chart-donut" width="400" height="250"></canvas>
+            </div>
+            <div class="chart-card">
+              <h4>Tareas completadas (últimos 14 días)</h4>
+              <canvas id="chart-bar" width="600" height="250"></canvas>
+            </div>
+          </div>
+
+          <div id="stats-message" class="stats-message"></div>
+        </div>
+      </section>-->
     </main>
   </div>
+
+      
+
 
   <!-- MODAL AGREGAR TAREA (solo para uso futuro / no hay botón directo) -->
   <div id="taskModal" class="task-modal" aria-hidden="true">

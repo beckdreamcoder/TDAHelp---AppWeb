@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDAHelp - Iniciar Sesión</title>
+
+    <!-- Rutas relativas correctas -->
     <link rel="stylesheet" href="./css/login.css">
+
+    <!-- IMPORTANTE: script.js debe cargarse con defer -->
+    <script src="./js/script.js" defer></script>
 </head>
+
 <body class="login-page">
     <div class="login-container">
         <div class="login-image-side">
+
+            <!-- Carrusel -->
             <div class="carousel" id="heroCarousel">
                 <div class="carousel-track">
                     <div class="carousel-slide active">
@@ -51,25 +59,26 @@
                     <p id="error-message" style="color: red; text-align: center; min-height: 1.2em;"></p>
 
                     <p class="login-signup">
-                        ¿Eres nuevo? <a href="register.html">Regístrate aquí</a>
+                        ¿Eres nuevo? <a href="./register.html">Regístrate aquí</a>
                     </p>
                 </form>
+
             </div>
         </div>
     </div>
 
-    <script src="./js/script.js"></script>
-
+    <!-- LÓGICA DE LOGIN, siempre al final -->
     <script>
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
+
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value.trim();
             const errorMessage = document.getElementById('error-message');
             errorMessage.textContent = '';
 
             const userDatabaseKey = 'userDatabase_v3';
-            let usersArray = JSON.parse(localStorage.getItem(userDatabaseKey)) || [];
+            const usersArray = JSON.parse(localStorage.getItem(userDatabaseKey)) || [];
 
             const foundUser = usersArray.find(user => user.email === email);
 
@@ -80,11 +89,12 @@
             
             if (foundUser.password === password) {
                 localStorage.setItem('currentUser', email); 
-                window.location.href = 'app.html';
+                window.location.href = './app.html';
             } else {
                 errorMessage.textContent = 'Contraseña incorrecta.';
             }
         });
     </script>
+
 </body>
 </html>

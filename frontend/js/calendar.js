@@ -1,5 +1,3 @@
-// /js/calendar.js
-
 import { getAllTasks, registerCalendarInstance } from "./tasks.js";
 
 let calendar = null;
@@ -11,11 +9,15 @@ let categoriaActiva = "ALL";
 function aplicarFiltroCalendario() {
   if (!calendar) return;
 
+  // Recorremos los eventos renderizados y ocultamos/mostramos
   calendar.getEvents().forEach((ev) => {
+    // Accedemos a la propiedad extendida que definimos abajo
     const cat = ev.extendedProps.categoria;
-    const mostrar =
-      categoriaActiva === "ALL" || (cat && cat === categoriaActiva);
+    
+    // Lógica: Si está en "ALL" o si la categoría coincide exactamente
+    const mostrar = categoriaActiva === "ALL" || (cat && cat === categoriaActiva);
 
+    // FullCalendar v5/v6 permite ocultar eventos sin borrarlos usando 'display'
     ev.setProp("display", mostrar ? "auto" : "none");
   });
 }
@@ -33,16 +35,24 @@ function initCalendar() {
     title: t.title,
     start: t.start,
     end: t.end,
-    backgroundColor: t.backgroundColor, // ✔ color correcto
-    borderColor: t.borderColor,         // ✔ borde correcto
+    backgroundColor: t.backgroundColor,
+    borderColor: t.borderColor,
     textColor: "#ffffff",
-    categoria: t.categoria,             // ✔ categoría para filtro
+    // Guardamos la categoría en extendedProps para poder filtrarla
     extendedProps: {
-      categoria: t.categoria,
+      categoria: t.categoria, 
     },
   }));
 
   calendar = new FullCalendar.Calendar(calendarEl, {
+    eventOverlap: true,
+    slotEventOverlap: false,
+    eventMinHeight: 25,        // Altura mínima por evento
+slotEventOverlap: false,   // Evita que los eventos se pongan a la derecha
+eventMaxStack: 100,        // Fuerza apilar eventos siempre en vertical
+eventOrder: "start",       // Orden cronológico
+
+
     initialView: "timeGridWeek",
     locale: "es",
     height: "auto",
@@ -69,38 +79,56 @@ function initCalendar() {
     },
 
     events: eventos,
-
     editable: true,
 
     eventClick(info) {
       const ok = confirm(`¿Eliminar "${info.event.title}"?`);
       if (!ok) return;
-
       info.event.remove();
     },
   });
 
   registerCalendarInstance(calendar);
 
+  // Renderizamos el calendario
+  calendar.render();
+
+  // 🔥 CORRECCIÓN 1: Llamamos a la configuración de los botones aquí
+  setupCalendarFilters();
+
+  // Aplicamos el filtro inicial por si acaso
   setTimeout(() => {
-    calendar.render();
     calendar.updateSize();
     aplicarFiltroCalendario();
   }, 100);
 }
 
 // ======================================================
+// CONFIGURAR LISTENERS DE LOS BOTONES
+// ======================================================
 function setupCalendarFilters() {
-  const filterButtons = document.querySelectorAll(".filter-btn");
-  if (!filterButtons.length) return;
+  // 🔥 CORRECCIÓN 2: Usamos la clase correcta '.cat-btn' (antes decía .filter-btn)
+  const filterButtons = document.querySelectorAll(".cat-btn");
+  
+  if (!filterButtons.length) {
+    console.warn("No se encontraron botones de filtro (.cat-btn)");
+    return;
+  }
 
   filterButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+      // 1. Quitar clase 'active' a todos
       filterButtons.forEach((b) => b.classList.remove("active"));
 
+      // 2. Poner 'active' al presionado
       btn.classList.add("active");
-      categoriaActiva = btn.dataset.category;
 
+      // 3. Actualizar variable de estado
+      categoriaActiva = btn.dataset.category; // Lee data-category="Educación"
+
+      console.log("Filtro cambiado a:", categoriaActiva); // Debug
+
+      // 4. Re-evaluar qué eventos se muestran
       aplicarFiltroCalendario();
     });
   });
@@ -109,6 +137,11 @@ function setupCalendarFilters() {
 // ======================================================
 function refreshCalendar() {
   if (!calendar) return;
+  // Opcional: recargar eventos si getAllTasks cambió
+  // const nuevosEventos = getAllTasks().map(...) 
+  // calendar.removeAllEvents();
+  // calendar.addEventSource(nuevosEventos);
+  
   calendar.render();
   calendar.updateSize();
   aplicarFiltroCalendario();

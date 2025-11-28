@@ -86,7 +86,7 @@
 }
 
 .fc .fc-timegrid-slot {
-  height: 3rem; /* más alto para ver mejor los bloques */
+  height: 9rem !important; /* 96px */
 }
 
 .fc .fc-col-header-cell-cushion {
@@ -172,3 +172,15 @@
   }
 }
 
+
+#calendar {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+/* Evita columnas múltiples cuando los eventos están pegados */
+.fc-timegrid-event-harness {
+  width: 100% !important;
+  left: 0 !important;
+}
