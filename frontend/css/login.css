@@ -1,9 +1,11 @@
 /* ==================================================================================== */
-/* LOGIN & REGISTER – ESTILOS ORIGINALES COMPLETOS                                      */
+/* LOGIN & REGISTER – ESTILOS ORIGINALES MEJORADOS + RESPONSIVOS                        */
 /* ==================================================================================== */
 
 body.login-page {
     background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
 }
 
 /* CONTENEDOR PRINCIPAL */
@@ -11,9 +13,12 @@ body.login-page {
     display: flex;
     height: 100vh;
     width: 100%;
+    overflow: hidden;
 }
 
-/* LADO DE LA IMAGEN – CARRUSEL */
+/* ========================= */
+/* LADO DE LA IMAGEN         */
+/* ========================= */
 .login-image-side {
     flex: 1.8;
     position: relative;
@@ -54,6 +59,7 @@ body.login-page {
     transform: scale(1.06);
     transition: transform 8s ease;
 }
+
 .carousel-control {
     position: absolute;
     top: 50%;
@@ -94,7 +100,9 @@ body.login-page {
     transform: scale(1.25);
 }
 
-/* LADO DEL FORMULARIO */
+/* ========================= */
+/* LADO DEL FORMULARIO       */
+/* ========================= */
 .login-form-side {
     flex: 1;
     display: flex;
@@ -177,4 +185,86 @@ body.login-page {
 }
 .login-signup a:hover {
     text-decoration: underline;
+}
+
+
+/* ==================================================================================== */
+/*                 🔥🔥🔥 RESPONSIVIDAD PROFESIONAL 🔥🔥🔥                               */
+/* ==================================================================================== */
+
+/* 📱 MÓVILES PEQUEÑOS Y MEDIANOS */
+@media (max-width: 768px) {
+
+    .login-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .login-image-side {
+        height: 35vh;
+        min-height: 250px;
+    }
+
+    .carousel {
+        height: 35vh;
+    }
+
+    .carousel-slide img {
+        transform: scale(1.1);
+    }
+
+    .login-form-side {
+        padding: 1.5rem;
+        justify-content: flex-start;
+    }
+
+    .login-form-wrapper {
+        max-width: 90%;
+        margin-top: 1rem;
+    }
+}
+
+/* 📱 MÓVILES MUY PEQUEÑOS (320px – 480px) */
+@media (max-width: 480px) {
+    .login-form-wrapper {
+        max-width: 95%;
+    }
+
+    .login-avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .btn-primary {
+        padding: 0.9rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* 🖥 TABLET (769px – 1024px) */
+@media (max-width: 1024px) {
+
+    .login-container {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .login-image-side {
+        height: 40vh;
+    }
+
+    .carousel {
+        height: 40vh;
+    }
+
+    .login-form-wrapper {
+        max-width: 450px;
+        margin: 2rem auto;
+    }
+}
+
+/* 💻 PANTALLA PEQUEÑA (1025px – 1360px) */
+@media (max-width: 1360px) {
+    .login-image-side { flex: 1.4; }
+    .login-form-side { flex: 1; }
 }
